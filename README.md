@@ -1,2 +1,7 @@
 # whatsapp4cardputer
-The name tells you everythiing
+
+THIS PROJECT ISN'T FINISHED YET. ANY HELP APPRECIATED
+
+
+## THANKS TO
+- [https://github.com/pr3y/Bruce](Bruce)
