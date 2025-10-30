@@ -13,7 +13,8 @@ The Name of this project literally tells you everything Important. I wanna build
 2. Run Server in your Network with NodeJS [Server.js](./server/server.js)
 
 ## Goals
-- [ ] Make it work in the local Network
+- [x] Make it work in the local Network 
+- [ ] Improve UI and make it run stable
 - [ ] Integrate some sort of port forwarding or sth like that so we can access whatsapp from anywhere (ngrok maybe)
 - [ ] More features?? / Integrations ?? 
 
