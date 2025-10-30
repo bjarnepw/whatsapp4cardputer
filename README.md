@@ -1,8 +1,8 @@
 # whatsapp4cardputer
-![GitHub Repo stars](https://img.shields.io/github/stars/bjarnewp/whatsapp4cardputer?style=plastic)
-![Forks](https://img.shields.io/github/forks/bjarnepw/whatsapp4cardputer?style=plastic)
-![Issues](https://img.shields.io/github/issues/bjarnepw/whatsapp4cardputer?style=plastic)
-![Current Status](https://img.shields.io/badge/STATUS:-NOT_COMPILABLE-red?style=plastic)
+![GitHub Repo stars](https://img.shields.io/github/stars/bjarnepw/whatsapp4cardputer?style=for-the-badge)
+![Forks](https://img.shields.io/github/forks/bjarnepw/whatsapp4cardputer?style=for-the-badge)
+![Issues](https://img.shields.io/github/issues/bjarnepw/whatsapp4cardputer?style=for-the-badge)
+![Current Status](https://img.shields.io/badge/STATUS:-NOT_COMPILABLE-red?style=for-the-badge)
 
 THIS PROJECT ISN'T FINISHED YET. ANY HELP APPRECIATED
 
