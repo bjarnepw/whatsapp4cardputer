@@ -7,11 +7,7 @@
 .pio/test/
 .pioinclude/
 .pioinit*
-
-# PlatformIO Core data
 .platformio/
-
-# Build outputs
 build/
 dist/
 
@@ -61,7 +57,21 @@ Thumbs.db
 .lock-wscript
 .node_repl_history
 
-## NODEJS
-./server/.wwebjs_cache/*
-./server/node_modules/*
-./server/package*
+# --- Node.js Server (to protect credentials etc.) ---
+server/node_modules/
+server/.wwebjs_cache/
+server/.wwebjs_auth/
+server/.cache/
+server/logs/
+server/temp/
+server/tmp/
+server/.env
+server/.env.*
+!server/.env.example
+server/package-lock.json
+server/yarn.lock
+server/npm-debug.log*
+server/dist/
+server/build/
+server/coverage/
+server/out/
