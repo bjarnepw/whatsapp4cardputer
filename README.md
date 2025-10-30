@@ -4,12 +4,8 @@
 ![Issues](https://img.shields.io/github/issues/bjarnepw/whatsapp4cardputer?style=for-the-badge)
 ![Current Status](https://img.shields.io/badge/STATUS-NOT_COMPILABLE-red?style=for-the-badge)
 
-THIS PROJECT ISN'T FINISHED YET. ANY HELP APPRECIATED
-
-README COMING SOON!
-
 ## IDEA
-The Name of this project literally tells you everything Important. I wanna build a custom Whatsapp Client for the Cardputer. Since the Cardputer just is an ESP 32
+The Name of this project literally tells you everything Important. I wanna build a custom Whatsapp Client for the Cardputer. Since the Cardputer just is an ESP 32 we need an extra Server for that.
 
 ## How to run (if it works)
 
