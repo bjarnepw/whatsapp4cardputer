@@ -13,9 +13,9 @@ The Name of this project literally tells you everything Important. I wanna build
 2. Run Server in your Network with NodeJS [Server.js](./server/server.js)
 
 ## Goals
-- [] Make it work in the local Network
-- [] Integrate some sort of port forwarding or sth like that 
-- [] More features?? / Integrations ?? 
+- [ ] Make it work in the local Network
+- [ ] Integrate some sort of port forwarding or sth like that 
+- [ ] More features?? / Integrations ?? 
 
 ## THANKS TO
 - [Bruce](https://github.com/pr3y/Bruce)
