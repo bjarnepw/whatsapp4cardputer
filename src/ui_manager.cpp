@@ -2,6 +2,14 @@
 #include "config.h"
 #include <WiFi.h>
 
+//TODO: MAKE THE SHOW PASSWORD THING WORK
+
+
+// GLOBAL VARIABLES
+bool showPassword = true;
+bool togglePasswordPressed = false; // to detect press
+
+
 void drawHeader(const char* title, uint16_t bgColor) {
     auto& lcd = M5.Display;
     lcd.fillRect(0, 0, lcd.width(), 18, bgColor);
@@ -127,19 +135,41 @@ void drawWifiScanPage() {
 
 void drawPasswordInputPage() {
     auto& lcd = M5.Display;
+
+    // Update button state (G0)
+    M5.update();
+    if (M5.BtnA.wasPressed() or M5.BtnC.wasPressed()) {  // G0 button on Cardputer
+        showPassword = !showPassword;
+        needsRedraw = true;
+    }
+
     if (!needsRedraw) {
+        // Update only the password field and toggle button
         lcd.fillRect(5, 50, 230, 24, 0x2104);
         lcd.setCursor(10, 55);
         lcd.setTextColor(WHITE);
         lcd.setTextSize(1);
-        String display = passwordInputBuffer;
-        for (int i = 0; i < display.length(); i++) {
-            lcd.print("*");
+
+        // Create masked or visible password text
+        String display;
+        if (showPassword) {
+            display = passwordInputBuffer;
+        } else {
+            for (size_t i = 0; i < passwordInputBuffer.length(); i++) {
+                display += '*';
+            }
         }
-        lcd.print("_");
+        lcd.print(display + "_");
+
+        // Draw the Show/Hide button
+        lcd.fillRoundRect(180, 80, 50, 16, 3, 0x0451);
+        lcd.setTextDatum(textdatum_t::middle_center);
+        lcd.setTextColor(WHITE);
+        lcd.drawString(showPassword ? "Hide" : "Show", 205, 88);
         return;
     }
 
+    // Full redraw
     lcd.clear(0x0841);
     drawHeader("Enter WiFi Password");
 
@@ -147,23 +177,40 @@ void drawPasswordInputPage() {
     lcd.setTextDatum(textdatum_t::top_left);
     lcd.setTextColor(0xAD55);
 
+    // Show SSID
     String displaySSID = wifiNetworks[selectedWifiIndex];
     if (displaySSID.length() > 30) {
         displaySSID = displaySSID.substring(0, 27) + "...";
     }
     lcd.drawString("SSID: " + displaySSID, 10, 28);
 
+    // Password input box
     lcd.fillRect(5, 50, 230, 24, 0x2104);
     lcd.setCursor(10, 55);
     lcd.setTextColor(WHITE);
-    for (int i = 0; i < passwordInputBuffer.length(); i++) {
-        lcd.print("*");
-    }
-    lcd.print("_");
 
-    drawFooter("` BACK | DEL | ENTER");
+    String display;
+    if (showPassword) {
+        display = passwordInputBuffer;
+    } else {
+        for (size_t i = 0; i < passwordInputBuffer.length(); i++) {
+            display += '*';
+        }
+    }
+    lcd.print(display + "_");
+
+    // Show/Hide toggle button
+    lcd.fillRoundRect(180, 80, 50, 16, 3, 0x0451);
+    lcd.setTextDatum(textdatum_t::middle_center);
+    lcd.setTextColor(WHITE);
+    lcd.drawString(showPassword ? "Hide" : "Show", 205, 88);
+
+    // Footer text
+    drawFooter("G0 TOGGLE | ` BACK | DEL | ENTER");
+
     needsRedraw = false;
 }
+
 
 void drawServerConfigPage() {
     auto& lcd = M5.Display;
