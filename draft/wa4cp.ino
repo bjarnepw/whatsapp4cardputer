@@ -250,7 +250,7 @@ bool fetchChatList() {
     int httpCode = http.GET();
     if (httpCode == HTTP_CODE_OK) {
         String payload = http.getString();
-        StaticJsonDocument<32768> doc;
+        JsonDocument doc;
 
         // FIXED: Only deserialize once!
         DeserializationError err = deserializeJson(doc, payload);
@@ -286,7 +286,7 @@ bool fetchChatMessages(String phone) {
     int httpCode = http.GET();
     if (httpCode == HTTP_CODE_OK) {
         String payload = http.getString();
-        StaticJsonDocument<16384> doc;
+        JsonDocument doc;
 
         DeserializationError err = deserializeJson(doc, payload);
         if (err) {
@@ -317,7 +317,7 @@ bool sendMessage(String phone, String text) {
     String url = buildApiUrl("/send");
     http.begin(url);
     http.addHeader("Content-Type", "application/json");
-    StaticJsonDocument<256> doc;
+    JsonDocument doc;
     doc["to"] = phone;  // Server now handles phone format correctly
     doc["text"] = text;
     String requestBody;
