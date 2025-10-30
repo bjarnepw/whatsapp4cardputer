@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-#define MAX_CHATS 5
-#define MAX_MESSAGES 10
+#define MAX_CHATS 50
+#define MAX_MESSAGES 200
 #define DEBOUNCE_DELAY 200
 
 extern char g_server_ip[40];

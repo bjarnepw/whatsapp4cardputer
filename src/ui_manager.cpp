@@ -37,7 +37,7 @@ void drawHeader(const char* title, uint16_t bgColor) {
     lcd.setTextSize(1);
     lcd.setTextDatum(textdatum_t::middle_left);
     lcd.drawString(title, lcd.width() / 2, 9);
-    lcd.setTextDatum(textdatum_t::middle_right);
+    lcd.setTextDatum(textdatum_t::middle_left);
 }
 
 void drawFooter(const char* text, uint16_t bgColor) {

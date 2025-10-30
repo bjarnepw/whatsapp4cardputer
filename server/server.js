@@ -10,10 +10,8 @@ app.use(bodyParser.json());
 // In-memory storage for chats/messages
 // messages[phone] = [{ from: 'me'|'them', text, time }]
 const messages = {};
-// Dieses Objekt wird jetzt beim Start automatisch gefüllt
-const contactNames = {
-    // Manuelle Einträge sind weiterhin möglich und überschreiben ggf. geladene Namen
-};
+
+const contactNames = {};
 
 function addMessage(phone, entry) {
     if (!messages[phone]) messages[phone] = [];
@@ -34,57 +32,47 @@ client.on('qr', (qr) => {
     qrcode.generate(qr, { small: true });
 });
 
-// HIER BEGINNEN DIE WICHTIGSTEN ÄNDERUNGEN
-// Wir machen den 'ready' Event-Handler 'async', damit wir 'await' verwenden können
+
 client.on('ready', async() => {
     console.log('✅ WhatsApp Client Ready!');
 
     // 1. Kontakte laden
-    console.log('Lade Kontakte...');
+    console.log('Loading Contacts...');
     try {
         const contacts = await client.getContacts();
         let loadedContacts = 0;
         for (const contact of contacts) {
-            // Wir speichern nur Kontakte, die einen Namen haben und nicht blockiert sind etc.
+
             if (contact.isMyContact && contact.name && contact.number) {
-                // contact.number ist das Format '4917...' (ohne +)
-                // Das passt zum 'phone'-Format, das du bereits verwendest
+
                 contactNames[contact.number] = contact.name;
                 loadedContacts++;
             }
         }
-        console.log(`✅ ${loadedContacts} Kontakte geladen und Namen zugeordnet.`);
+        console.log(`✅ ${loadedContacts} Contacts loaded and names assigned.`);
     } catch (e) {
-        console.error('Fehler beim Laden der Kontakte:', e);
+        console.error('Error loading contacts:', e);
     }
 
-    // 2. Bestehende Chats und Nachrichten laden
-    console.log('Lade bestehende Chats (dies kann einen Moment dauern)...');
+    console.log('Loading Chats (this can take a while)...');
 
-    // Diesen Wert kannst du anpassen (z.B. 100 oder 200).
-    // 'Infinity' lädt alle, ist aber SEHR langsam und speicherintensiv.
-    const messageLimit = 50;
+
+    const messageLimit = null; //loads infinit messages hopefully 
 
     try {
         const chats = await client.getChats();
         for (const chat of chats) {
-            // Überspringe Gruppen, da das Skript nicht dafür ausgelegt ist
             if (chat.isGroup) {
                 continue;
             }
 
-            // Hole die Telefonnummer im Format '4917...'
             const phone = chat.id.user;
 
-            // Lade die letzten X Nachrichten
             const chatMessages = await chat.fetchMessages({ limit: messageLimit });
 
-            // 'fetchMessages' liefert Nachrichten von neu nach alt.
-            // Wir drehen sie um, damit wir sie chronologisch (alt nach neu) speichern.
             for (const msg of chatMessages.reverse()) {
                 const isMe = msg.fromMe || false;
 
-                // msg.timestamp ist in Sekunden, Date.now() ist in Millisekunden
                 const timestampMs = msg.timestamp * 1000;
 
                 addMessage(phone, {
@@ -94,12 +82,12 @@ client.on('ready', async() => {
                 });
             }
         }
-        console.log(`✅ Chatverlauf (letzte ${messageLimit} Nachrichten) für ${chats.length} Chats geladen.`);
+        console.log(`✅ Chat (last ${messageLimit} messages) for ${chats.length} loaded.`);
     } catch (e) {
         console.error('Fehler beim Laden der Chatverläufe:', e);
     }
 });
-// HIER ENDEN DIE WICHTIGSTEN ÄNDERUNGEN
+
 
 client.on('auth_failure', (msg) => {
     console.error('Auth failure', msg);
