@@ -17,5 +17,10 @@ void drawChatsPage();
 void drawChatView();
 void drawInputBox();
 void drawSettingsPage();
+void drawNgrokChoicePage();
+void drawNgrokUsernameInputPage();
+void drawNgrokPasswordInputPage();
+void drawServerAddressInputPage();
+void drawServerPortInputPage();
 
 #endif

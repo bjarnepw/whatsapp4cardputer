@@ -11,6 +11,9 @@ extern char g_server_ip[40];
 extern char g_server_port[6];
 extern char g_wifi_ssid[32];
 extern char g_wifi_password[64];
+extern bool g_use_ngrok;
+extern char g_ngrok_username[64];
+extern char g_ngrok_password[64];
 
 struct MessageEntry {
     String from;
@@ -34,7 +37,12 @@ enum AppState {
     STATE_CHAT_VIEW,
     STATE_TYPING_MESSAGE,
     STATE_SETTINGS,
-    STATE_SERVER_CONFIG
+    STATE_SERVER_CONFIG,
+    STATE_NGROK_CHOICE,
+    STATE_NGROK_USERNAME_INPUT,
+    STATE_NGROK_PASSWORD_INPUT,
+    STATE_SERVER_ADDRESS_INPUT,
+    STATE_SERVER_PORT_INPUT
 };
 
 extern AppState currentState;
@@ -56,6 +64,9 @@ extern String serverInputBuffer;
 extern int serverConfigStep;
 extern int selectedMainMenu;
 extern int selectedSetting;
+extern int selectedNgrokChoice;
+extern String ngrokUsernameBuffer;
+extern String ngrokPasswordBuffer;
 
 extern unsigned long lastKeyPress;
 

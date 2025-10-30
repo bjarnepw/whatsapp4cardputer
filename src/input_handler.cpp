@@ -120,56 +120,9 @@ void handlePasswordInput() {
 }
 
 void handleServerConfigInput() {
-    M5Cardputer.update();
-    Keyboard_Class::KeysState keyState = M5Cardputer.Keyboard.keysState();
-
-    bool updated = false;
-
-    for (auto i : keyState.word) {
-        if (i >= 32 && i <= 126) {
-            serverInputBuffer += (char)i;
-            updated = true;
-        }
-    }
-
-    if (keyState.del && serverInputBuffer.length() > 0) {
-        serverInputBuffer.remove(serverInputBuffer.length() - 1);
-        updated = true;
-    }
-
-    if (keyState.enter && checkKeyPress()) {
-        if (serverConfigStep == 0) {
-            String newIP = serverInputBuffer;
-            serverInputBuffer = "";
-            serverConfigStep = 1;
-            saveServerConfig(newIP, String(g_server_port));
-            needsRedraw = true;
-        } else {
-            String newPort = serverInputBuffer;
-            saveServerConfig(String(g_server_ip), newPort);
-            serverInputBuffer = "";
-            serverConfigStep = 0;
-            showStatusScreen("Saved!", "Server: " + String(g_server_ip) + ":" + String(g_server_port));
-            delay(1500);
-            currentState = STATE_SETTINGS;
-            needsRedraw = true;
-        }
-        return;
-    }
-
-    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
-        serverInputBuffer = "";
-        serverConfigStep = 0;
-        currentState = STATE_SETTINGS;
-        needsRedraw = true;
-        return;
-    }
-
-    if (updated) {
-        drawServerConfigPage();
-    }
-
-    delay(100);
+    currentState = STATE_NGROK_CHOICE;
+    selectedNgrokChoice = g_use_ngrok ? 0 : 1;
+    needsRedraw = true;
 }
 
 void handleChatListInput() {
@@ -212,11 +165,15 @@ void handleChatViewInput() {
     if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
         currentState = STATE_CHAT_LIST;
         needsRedraw = true;
+        return;
     }
     if (keyState.enter && checkKeyPress()) {
         messageInputBuffer = "";
         currentState = STATE_TYPING_MESSAGE;
-        needsRedraw = true;
+        drawChatView();
+        drawInputBox();
+        needsRedraw = false;
+        return;
     }
 }
 
@@ -290,10 +247,7 @@ void handleSettingsInput() {
         if (selectedSetting == 0) {
             scanWifiNetworks();
         } else if (selectedSetting == 1) {
-            serverInputBuffer = "";
-            serverConfigStep = 0;
-            currentState = STATE_SERVER_CONFIG;
-            needsRedraw = true;
+            handleServerConfigInput();
         } else if (selectedSetting == 2) {
             showStatusScreen("Resetting...", "Clearing all config...");
             clearPreferences();
@@ -302,4 +256,199 @@ void handleSettingsInput() {
             ESP.restart();
         }
     }
+}
+
+void handleNgrokChoiceInput() {
+    M5Cardputer.update();
+    Keyboard_Class::KeysState keyState = M5Cardputer.Keyboard.keysState();
+
+    if (M5Cardputer.Keyboard.isKeyPressed(';') && checkKeyPress()) {
+        selectedNgrokChoice = max(0, selectedNgrokChoice - 1);
+        needsRedraw = true;
+    }
+    if (M5Cardputer.Keyboard.isKeyPressed('.') && checkKeyPress()) {
+        selectedNgrokChoice = min(1, selectedNgrokChoice + 1);
+        needsRedraw = true;
+    }
+    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+        currentState = STATE_SETTINGS;
+        needsRedraw = true;
+    }
+    if (keyState.enter && checkKeyPress()) {
+        if (selectedNgrokChoice == 0) {
+            ngrokUsernameBuffer = String(g_ngrok_username);
+            currentState = STATE_NGROK_USERNAME_INPUT;
+            needsRedraw = true;
+        } else {
+            serverInputBuffer = String(g_server_ip);
+            currentState = STATE_SERVER_ADDRESS_INPUT;
+            needsRedraw = true;
+        }
+    }
+}
+
+void handleNgrokUsernameInput() {
+    M5Cardputer.update();
+    Keyboard_Class::KeysState keyState = M5Cardputer.Keyboard.keysState();
+
+    bool updated = false;
+
+    for (auto i : keyState.word) {
+        if (i >= 32 && i <= 126) {
+            ngrokUsernameBuffer += (char)i;
+            updated = true;
+        }
+    }
+
+    if (keyState.del && ngrokUsernameBuffer.length() > 0) {
+        ngrokUsernameBuffer.remove(ngrokUsernameBuffer.length() - 1);
+        updated = true;
+    }
+
+    if (keyState.enter && checkKeyPress()) {
+        ngrokPasswordBuffer = String(g_ngrok_password);
+        currentState = STATE_NGROK_PASSWORD_INPUT;
+        needsRedraw = true;
+        return;
+    }
+
+    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+        currentState = STATE_NGROK_CHOICE;
+        needsRedraw = true;
+        return;
+    }
+
+    if (updated) {
+        drawNgrokUsernameInputPage();
+    }
+
+    delay(100);
+}
+
+void handleNgrokPasswordInput() {
+    M5Cardputer.update();
+    Keyboard_Class::KeysState keyState = M5Cardputer.Keyboard.keysState();
+
+    bool updated = false;
+
+    for (auto i : keyState.word) {
+        if (i >= 32 && i <= 126) {
+            ngrokPasswordBuffer += (char)i;
+            updated = true;
+        }
+    }
+
+    if (keyState.del && ngrokPasswordBuffer.length() > 0) {
+        ngrokPasswordBuffer.remove(ngrokPasswordBuffer.length() - 1);
+        updated = true;
+    }
+
+    if (keyState.enter && checkKeyPress()) {
+        saveNgrokConfig(true, ngrokUsernameBuffer, ngrokPasswordBuffer);
+        serverInputBuffer = String(g_server_ip);
+        currentState = STATE_SERVER_ADDRESS_INPUT;
+        needsRedraw = true;
+        return;
+    }
+
+    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+        currentState = STATE_NGROK_USERNAME_INPUT;
+        needsRedraw = true;
+        return;
+    }
+
+    if (updated) {
+        drawNgrokPasswordInputPage();
+    }
+
+    delay(100);
+}
+
+void handleServerAddressInput() {
+    M5Cardputer.update();
+    Keyboard_Class::KeysState keyState = M5Cardputer.Keyboard.keysState();
+
+    bool updated = false;
+
+    for (auto i : keyState.word) {
+        if (i >= 32 && i <= 126) {
+            serverInputBuffer += (char)i;
+            updated = true;
+        }
+    }
+
+    if (keyState.del && serverInputBuffer.length() > 0) {
+        serverInputBuffer.remove(serverInputBuffer.length() - 1);
+        updated = true;
+    }
+
+    if (keyState.enter && checkKeyPress()) {
+        String newIP = serverInputBuffer;
+        saveServerConfig(newIP, String(g_server_port));
+        serverInputBuffer = String(g_server_port);
+        currentState = STATE_SERVER_PORT_INPUT;
+        needsRedraw = true;
+        return;
+    }
+
+    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+        if (selectedNgrokChoice == 0) {
+            currentState = STATE_NGROK_PASSWORD_INPUT;
+        } else {
+            currentState = STATE_NGROK_CHOICE;
+        }
+        needsRedraw = true;
+        return;
+    }
+
+    if (updated) {
+        drawServerAddressInputPage();
+    }
+
+    delay(100);
+}
+
+void handleServerPortInput() {
+    M5Cardputer.update();
+    Keyboard_Class::KeysState keyState = M5Cardputer.Keyboard.keysState();
+
+    bool updated = false;
+
+    for (auto i : keyState.word) {
+        if (i >= 32 && i <= 126) {
+            serverInputBuffer += (char)i;
+            updated = true;
+        }
+    }
+
+    if (keyState.del && serverInputBuffer.length() > 0) {
+        serverInputBuffer.remove(serverInputBuffer.length() - 1);
+        updated = true;
+    }
+
+    if (keyState.enter && checkKeyPress()) {
+        String newPort = serverInputBuffer;
+        saveServerConfig(String(g_server_ip), newPort);
+        if (selectedNgrokChoice == 1) {
+            saveNgrokConfig(false, "", "");
+        }
+        serverInputBuffer = "";
+        showStatusScreen("Saved!", "Server: " + String(g_server_ip) + ":" + String(g_server_port));
+        delay(1500);
+        currentState = STATE_SETTINGS;
+        needsRedraw = true;
+        return;
+    }
+
+    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+        currentState = STATE_SERVER_ADDRESS_INPUT;
+        needsRedraw = true;
+        return;
+    }
+
+    if (updated) {
+        drawServerPortInputPage();
+    }
+
+    delay(100);
 }

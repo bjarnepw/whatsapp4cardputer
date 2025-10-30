@@ -384,7 +384,7 @@ void drawSettingsPage() {
     lcd.setTextSize(1);
     lcd.setTextDatum(textdatum_t::top_left);
 
-    const char* settings[] = {"WiFi Setup", "Server IP/Port", "Reset Config"};
+    const char* settings[] = {"WiFi Setup", "Server Config", "Reset Config"};
     const int settingsCount = 3;
 
     int startY = 30;
@@ -401,4 +401,163 @@ void drawSettingsPage() {
     }
 
     drawFooter("` BACK | UP/DOWN | ENTER", BACKGROUND_FOOTER);
+}
+
+void drawNgrokChoicePage() {
+    auto& lcd = M5.Display;
+    lcd.clear(BACKGROUND_COLOR);
+    drawHeader("Server Configuration", BACKGROUND_HEADER);
+
+    lcd.setTextSize(1);
+    lcd.setTextDatum(textdatum_t::top_left);
+    lcd.setTextColor(TEXT_SECONDARY);
+    lcd.drawString("Do you use ngrok?", 10, 28);
+
+    const char* choices[] = {"Yes - Use ngrok", "No - Direct connection"};
+    for (int i = 0; i < 2; i++) {
+        int y = 55 + i * 35;
+        if (i == selectedNgrokChoice) {
+            lcd.fillRoundRect(10, y, 220, 30, 4, BACKGROUND_SELECTED);
+            lcd.setTextColor(TEXT_PRIMARY);
+        } else {
+            lcd.fillRoundRect(10, y, 220, 30, 4, BACKGROUND_NOT_SELECTED);
+            lcd.setTextColor(TEXT_SECONDARY);
+        }
+        lcd.setTextDatum(textdatum_t::middle_center);
+        lcd.drawString(choices[i], 120, y + 15);
+    }
+
+    drawFooter("` BACK | UP/DOWN | ENTER", BACKGROUND_FOOTER);
+}
+
+void drawNgrokUsernameInputPage() {
+    auto& lcd = M5.Display;
+
+    if (!needsRedraw) {
+        lcd.fillRect(5, 60, 230, 24, 0x2104);
+        lcd.setCursor(10, 65);
+        lcd.setTextColor(TEXT_PRIMARY);
+        lcd.setTextSize(1);
+        String display = ngrokUsernameBuffer;
+        if (display.length() > 30) display = display.substring(display.length() - 30);
+        lcd.print(display + "_");
+        return;
+    }
+
+    lcd.clear(BACKGROUND_COLOR);
+    drawHeader("ngrok Username", BACKGROUND_HEADER);
+
+    lcd.setTextSize(1);
+    lcd.setTextDatum(textdatum_t::top_left);
+    lcd.setTextColor(TEXT_SECONDARY);
+    lcd.drawString("Enter your ngrok username:", 10, 28);
+
+    lcd.fillRect(5, 60, 230, 24, 0x2104);
+    lcd.setCursor(10, 65);
+    lcd.setTextColor(TEXT_PRIMARY);
+    lcd.print(ngrokUsernameBuffer + "_");
+
+    drawFooter("` BACK | DEL | ENTER", BACKGROUND_FOOTER);
+    needsRedraw = false;
+}
+
+void drawNgrokPasswordInputPage() {
+    auto& lcd = M5.Display;
+
+    if (!needsRedraw) {
+        lcd.fillRect(5, 60, 230, 24, 0x2104);
+        lcd.setCursor(10, 65);
+        lcd.setTextColor(TEXT_PRIMARY);
+        lcd.setTextSize(1);
+        String display = "";
+        for (size_t i = 0; i < ngrokPasswordBuffer.length(); i++) {
+            display += '*';
+        }
+        lcd.print(display + "_");
+        return;
+    }
+
+    lcd.clear(BACKGROUND_COLOR);
+    drawHeader("ngrok Password", BACKGROUND_HEADER);
+
+    lcd.setTextSize(1);
+    lcd.setTextDatum(textdatum_t::top_left);
+    lcd.setTextColor(TEXT_SECONDARY);
+    lcd.drawString("Enter your ngrok password:", 10, 28);
+
+    lcd.fillRect(5, 60, 230, 24, 0x2104);
+    lcd.setCursor(10, 65);
+    lcd.setTextColor(TEXT_PRIMARY);
+    String display = "";
+    for (size_t i = 0; i < ngrokPasswordBuffer.length(); i++) {
+        display += '*';
+    }
+    lcd.print(display + "_");
+
+    drawFooter("` BACK | DEL | ENTER", BACKGROUND_FOOTER);
+    needsRedraw = false;
+}
+
+void drawServerAddressInputPage() {
+    auto& lcd = M5.Display;
+
+    if (!needsRedraw) {
+        lcd.fillRect(5, 60, 230, 24, 0x2104);
+        lcd.setCursor(10, 65);
+        lcd.setTextColor(TEXT_PRIMARY);
+        lcd.setTextSize(1);
+        String display = serverInputBuffer;
+        if (display.length() > 30) display = display.substring(display.length() - 30);
+        lcd.print(display + "_");
+        return;
+    }
+
+    lcd.clear(BACKGROUND_COLOR);
+    drawHeader("Server Address", BACKGROUND_HEADER);
+
+    lcd.setTextSize(1);
+    lcd.setTextDatum(textdatum_t::top_left);
+    lcd.setTextColor(TEXT_SECONDARY);
+    lcd.drawString("Current: " + String(g_server_ip), 10, 28);
+    lcd.setTextColor(TEXT_PRIMARY);
+    lcd.drawString("New Address:", 10, 45);
+
+    lcd.fillRect(5, 60, 230, 24, 0x2104);
+    lcd.setCursor(10, 65);
+    lcd.print(serverInputBuffer + "_");
+
+    drawFooter("` BACK | DEL | ENTER", BACKGROUND_FOOTER);
+    needsRedraw = false;
+}
+
+void drawServerPortInputPage() {
+    auto& lcd = M5.Display;
+
+    if (!needsRedraw) {
+        lcd.fillRect(5, 60, 230, 24, 0x2104);
+        lcd.setCursor(10, 65);
+        lcd.setTextColor(TEXT_PRIMARY);
+        lcd.setTextSize(1);
+        String display = serverInputBuffer;
+        if (display.length() > 30) display = display.substring(display.length() - 30);
+        lcd.print(display + "_");
+        return;
+    }
+
+    lcd.clear(BACKGROUND_COLOR);
+    drawHeader("Server Port", BACKGROUND_HEADER);
+
+    lcd.setTextSize(1);
+    lcd.setTextDatum(textdatum_t::top_left);
+    lcd.setTextColor(TEXT_SECONDARY);
+    lcd.drawString("Current: " + String(g_server_port), 10, 28);
+    lcd.setTextColor(TEXT_PRIMARY);
+    lcd.drawString("New Port:", 10, 45);
+
+    lcd.fillRect(5, 60, 230, 24, 0x2104);
+    lcd.setCursor(10, 65);
+    lcd.print(serverInputBuffer + "_");
+
+    drawFooter("` BACK | DEL | ENTER", BACKGROUND_FOOTER);
+    needsRedraw = false;
 }

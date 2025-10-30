@@ -74,6 +74,21 @@ void loop() {
             case STATE_SETTINGS:
                 drawSettingsPage();
                 break;
+            case STATE_NGROK_CHOICE:
+                drawNgrokChoicePage();
+                break;
+            case STATE_NGROK_USERNAME_INPUT:
+                drawNgrokUsernameInputPage();
+                break;
+            case STATE_NGROK_PASSWORD_INPUT:
+                drawNgrokPasswordInputPage();
+                break;
+            case STATE_SERVER_ADDRESS_INPUT:
+                drawServerAddressInputPage();
+                break;
+            case STATE_SERVER_PORT_INPUT:
+                drawServerPortInputPage();
+                break;
         }
         needsRedraw = false;
     }
@@ -102,6 +117,21 @@ void loop() {
             break;
         case STATE_SETTINGS:
             handleSettingsInput();
+            break;
+        case STATE_NGROK_CHOICE:
+            handleNgrokChoiceInput();
+            break;
+        case STATE_NGROK_USERNAME_INPUT:
+            handleNgrokUsernameInput();
+            break;
+        case STATE_NGROK_PASSWORD_INPUT:
+            handleNgrokPasswordInput();
+            break;
+        case STATE_SERVER_ADDRESS_INPUT:
+            handleServerAddressInput();
+            break;
+        case STATE_SERVER_PORT_INPUT:
+            handleServerPortInput();
             break;
     }
 
