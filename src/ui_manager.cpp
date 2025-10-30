@@ -470,6 +470,7 @@ void drawNgrokPasswordInputPage() {
         lcd.setTextColor(TEXT_PRIMARY);
         lcd.setTextSize(1);
         String display = "";
+<<<<<<< HEAD
         if(showPassword){
             display = ngrokPasswordBuffer;
         }
@@ -477,6 +478,10 @@ void drawNgrokPasswordInputPage() {
             for (size_t i = 0; i < ngrokPasswordBuffer.length(); i++) {
                 display += '*';
             }
+=======
+        for (size_t i = 0; i < ngrokPasswordBuffer.length(); i++) {
+            display += '*';
+>>>>>>> d82b53f90c0a7bf40de3fc5d3b2f6b90060c9ecf
         }
         lcd.print(display + "_");
         return;
@@ -494,6 +499,7 @@ void drawNgrokPasswordInputPage() {
     lcd.setCursor(10, 65);
     lcd.setTextColor(TEXT_PRIMARY);
     String display = "";
+<<<<<<< HEAD
     if(showPassword){
         display = ngrokPasswordBuffer;
     }
@@ -501,6 +507,10 @@ void drawNgrokPasswordInputPage() {
         for (size_t i = 0; i < ngrokPasswordBuffer.length(); i++) {
             display += '*';
         }
+=======
+    for (size_t i = 0; i < ngrokPasswordBuffer.length(); i++) {
+        display += '*';
+>>>>>>> d82b53f90c0a7bf40de3fc5d3b2f6b90060c9ecf
     }
     lcd.print(display + "_");
 
