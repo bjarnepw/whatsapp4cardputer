@@ -60,3 +60,8 @@ Thumbs.db
 .yarn-integrity
 .lock-wscript
 .node_repl_history
+
+## NODEJS
+./server/.wwebjs_cache/*
+./server/node_modules/*
+./server/package*
