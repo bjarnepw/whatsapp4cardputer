@@ -9,14 +9,35 @@
 bool showPassword = true;
 bool togglePasswordPressed = false; // to detect press
 
+//THEME (FOR NOW)
+////HEADER
+const uint16_t BACKGROUND_HEADER = 0x0621;
+const uint16_t FOREGROUND_HEADER = 0xffff;
+////FOOTER
+const uint16_t BACKGROUND_FOOTER = 0x18c3;
+const uint16_t FOREGROUND_FOOTER = 0xffff;
+////GENERAL
+const uint16_t BACKGROUND_COLOR = 0x18c3; 
+
+const uint16_t BACKGROUND_SELECTED = 0x0621;
+const uint16_t BACKGROUND_NOT_SELECTED = 0x1082;
+
+const uint16_t TEXT_PRIMARY = 0xffff;
+const uint16_t TEXT_SECONDARY = 0xAD55; 
+
+
+
+
+
 
 void drawHeader(const char* title, uint16_t bgColor) {
     auto& lcd = M5.Display;
     lcd.fillRect(0, 0, lcd.width(), 18, bgColor);
-    lcd.setTextColor(WHITE);
+    lcd.setTextColor(FOREGROUND_HEADER);
     lcd.setTextSize(1);
-    lcd.setTextDatum(textdatum_t::middle_center);
+    lcd.setTextDatum(textdatum_t::middle_left);
     lcd.drawString(title, lcd.width() / 2, 9);
+    lcd.setTextDatum(textdatum_t::middle_right);
 }
 
 void drawFooter(const char* text, uint16_t bgColor) {
@@ -24,17 +45,17 @@ void drawFooter(const char* text, uint16_t bgColor) {
     int footerHeight = 14;
     int footerY = lcd.height() - footerHeight;
     lcd.fillRect(0, footerY, lcd.width(), footerHeight, bgColor);
-    lcd.setTextColor(WHITE);
+    lcd.setTextColor(FOREGROUND_FOOTER);
     lcd.setTextSize(1);
     lcd.setTextDatum(textdatum_t::middle_center);
     lcd.drawString(text, lcd.width() / 2, footerY + 7);
 }
 
 void showStatusScreen(String title, String message) {
-    M5Cardputer.Display.fillScreen(0x0841);
-    drawHeader(title.c_str());
+    M5Cardputer.Display.fillScreen(BACKGROUND_COLOR);
+    drawHeader(title.c_str(), BACKGROUND_HEADER);
     M5Cardputer.Display.setTextSize(1);
-    M5Cardputer.Display.setTextColor(WHITE);
+    M5Cardputer.Display.setTextColor(TEXT_PRIMARY);
     M5Cardputer.Display.setTextDatum(textdatum_t::top_left);
     M5Cardputer.Display.drawString(message, 10, 30);
 }
@@ -75,14 +96,14 @@ int drawWrappedText(String text, int x, int y, int maxWidth, bool alignRight, ui
 
 void drawMainMenu() {
     auto& lcd = M5.Display;
-    lcd.clear(0x0841);
-    drawHeader("WhatsApp Client");
+    lcd.clear(BACKGROUND_COLOR);
+    drawHeader("WhatsApp Client", BACKGROUND_HEADER);
 
     lcd.setTextSize(1);
     lcd.setTextDatum(textdatum_t::top_left);
 
     String wifiStatus = WiFi.status() == WL_CONNECTED ? String(g_wifi_ssid) : "Not Connected";
-    lcd.setTextColor(WHITE);
+    lcd.setTextColor(TEXT_PRIMARY);
     lcd.drawString("WiFi: " + wifiStatus, 10, 28);
     lcd.drawString("Server: " + String(g_server_ip) + ":" + String(g_server_port), 10, 42);
 
@@ -90,23 +111,23 @@ void drawMainMenu() {
     for (int i = 0; i < 2; i++) {
         int y = 65 + i * 35;
         if (i == selectedMainMenu) {
-            lcd.fillRoundRect(10, y, 220, 30, 4, 0x0451);
-            lcd.setTextColor(WHITE);
+            lcd.fillRoundRect(10, y, 220, 30, 4, BACKGROUND_SELECTED);
+            lcd.setTextColor(TEXT_PRIMARY);
         } else {
-            lcd.fillRoundRect(10, y, 220, 30, 4, 0x1082);
-            lcd.setTextColor(WHITE);
+            lcd.fillRoundRect(10, y, 220, 30, 4, BACKGROUND_NOT_SELECTED);
+            lcd.setTextColor(TEXT_SECONDARY);
         }
         lcd.setTextDatum(textdatum_t::middle_center);
         lcd.drawString(menuItems[i], 120, y + 15);
     }
 
-    drawFooter("UP/DOWN + ENTER");
+    drawFooter("UP/DOWN + ENTER", BACKGROUND_FOOTER);
 }
 
 void drawWifiScanPage() {
     auto& lcd = M5.Display;
-    lcd.clear(0x0841);
-    drawHeader("Select WiFi Network");
+    lcd.clear(BACKGROUND_COLOR);
+    drawHeader("Select WiFi Network", BACKGROUND_HEADER);
 
     lcd.setTextSize(1);
     lcd.setTextDatum(textdatum_t::top_left);
@@ -117,10 +138,10 @@ void drawWifiScanPage() {
         int y = startY + i * 18;
 
         if (i == selectedWifiIndex) {
-            lcd.fillRoundRect(5, y - 2, 230, 16, 3, 0x0451);
-            lcd.setTextColor(WHITE);
+            lcd.fillRoundRect(5, y - 2, 230, 16, 3, BACKGROUND_SELECTED);
+            lcd.setTextColor(TEXT_PRIMARY);
         } else {
-            lcd.setTextColor(0xAD55);
+            lcd.setTextColor(TEXT_SECONDARY);
         }
 
         String displayName = wifiNetworks[i];
@@ -130,7 +151,7 @@ void drawWifiScanPage() {
         lcd.drawString(displayName, 10, y);
     }
 
-    drawFooter("` BACK | UP/DOWN | ENTER");
+    drawFooter("` BACK | UP/DOWN | ENTER", BACKGROUND_FOOTER);
 }
 
 void drawPasswordInputPage() {
@@ -147,7 +168,7 @@ void drawPasswordInputPage() {
         // Update only the password field and toggle button
         lcd.fillRect(5, 50, 230, 24, 0x2104);
         lcd.setCursor(10, 55);
-        lcd.setTextColor(WHITE);
+        lcd.setTextColor(TEXT_PRIMARY);
         lcd.setTextSize(1);
 
         // Create masked or visible password text
@@ -162,20 +183,20 @@ void drawPasswordInputPage() {
         lcd.print(display + "_");
 
         // Draw the Show/Hide button
-        lcd.fillRoundRect(180, 80, 50, 16, 3, 0x0451);
+        lcd.fillRoundRect(180, 80, 50, 16, 3, BACKGROUND_SELECTED);
         lcd.setTextDatum(textdatum_t::middle_center);
-        lcd.setTextColor(WHITE);
+        lcd.setTextColor(TEXT_PRIMARY);
         lcd.drawString(showPassword ? "Hide" : "Show", 205, 88);
         return;
     }
 
     // Full redraw
-    lcd.clear(0x0841);
-    drawHeader("Enter WiFi Password");
+    lcd.clear(BACKGROUND_COLOR);
+    drawHeader("Enter WiFi Password", BACKGROUND_HEADER);
 
     lcd.setTextSize(1);
     lcd.setTextDatum(textdatum_t::top_left);
-    lcd.setTextColor(0xAD55);
+    lcd.setTextColor(TEXT_SECONDARY);
 
     // Show SSID
     String displaySSID = wifiNetworks[selectedWifiIndex];
@@ -187,7 +208,7 @@ void drawPasswordInputPage() {
     // Password input box
     lcd.fillRect(5, 50, 230, 24, 0x2104);
     lcd.setCursor(10, 55);
-    lcd.setTextColor(WHITE);
+    lcd.setTextColor(TEXT_PRIMARY);
 
     String display;
     if (showPassword) {
@@ -200,13 +221,13 @@ void drawPasswordInputPage() {
     lcd.print(display + "_");
 
     // Show/Hide toggle button
-    lcd.fillRoundRect(180, 80, 50, 16, 3, 0x0451);
+    lcd.fillRoundRect(180, 80, 50, 16, 3, BACKGROUND_SELECTED);
     lcd.setTextDatum(textdatum_t::middle_center);
-    lcd.setTextColor(WHITE);
+    lcd.setTextColor(TEXT_PRIMARY);
     lcd.drawString(showPassword ? "Hide" : "Show", 205, 88);
 
     // Footer text
-    drawFooter("G0 TOGGLE | ` BACK | DEL | ENTER");
+    drawFooter("G0 TOGGLE | ` BACK | DEL | ENTER", BACKGROUND_FOOTER);
 
     needsRedraw = false;
 }
@@ -218,7 +239,7 @@ void drawServerConfigPage() {
     if (!needsRedraw) {
         lcd.fillRect(5, 60, 230, 24, 0x2104);
         lcd.setCursor(10, 65);
-        lcd.setTextColor(WHITE);
+        lcd.setTextColor(TEXT_PRIMARY);
         lcd.setTextSize(1);
         String display = serverInputBuffer;
         if (display.length() > 30) display = display.substring(display.length() - 30);
@@ -226,23 +247,23 @@ void drawServerConfigPage() {
         return;
     }
 
-    lcd.clear(0x0841);
+    lcd.clear(BACKGROUND_COLOR);
 
     if (serverConfigStep == 0) {
-        drawHeader("Server IP Address");
+        drawHeader("Server IP Address", BACKGROUND_HEADER);
         lcd.setTextSize(1);
         lcd.setTextDatum(textdatum_t::top_left);
-        lcd.setTextColor(0xAD55);
+        lcd.setTextColor(TEXT_SECONDARY);
         lcd.drawString("Current: " + String(g_server_ip), 10, 28);
-        lcd.setTextColor(WHITE);
+        lcd.setTextColor(TEXT_PRIMARY);
         lcd.drawString("New IP:", 10, 45);
     } else {
-        drawHeader("Server Port");
+        drawHeader("Server Port", BACKGROUND_HEADER);
         lcd.setTextSize(1);
         lcd.setTextDatum(textdatum_t::top_left);
-        lcd.setTextColor(0xAD55);
+        lcd.setTextColor(TEXT_SECONDARY);
         lcd.drawString("Current: " + String(g_server_port), 10, 28);
-        lcd.setTextColor(WHITE);
+        lcd.setTextColor(TEXT_PRIMARY);
         lcd.drawString("New Port:", 10, 45);
     }
 
@@ -250,14 +271,14 @@ void drawServerConfigPage() {
     lcd.setCursor(10, 65);
     lcd.print(serverInputBuffer + "_");
 
-    drawFooter("` BACK | DEL | ENTER");
+    drawFooter("` BACK | DEL | ENTER", BACKGROUND_FOOTER);
     needsRedraw = false;
 }
 
 void drawChatsPage() {
     auto& lcd = M5.Display;
-    lcd.clear(0x0841);
-    drawHeader("Chats");
+    lcd.clear(BACKGROUND_COLOR);
+    drawHeader("Chats", BACKGROUND_HEADER);
 
     lcd.setTextSize(1);
     lcd.setTextDatum(textdatum_t::top_left);
@@ -271,10 +292,10 @@ void drawChatsPage() {
         int y = startY + i * 18;
 
         if (chatIndex == selectedChatIndex) {
-            lcd.fillRoundRect(5, y - 2, 230, 16, 3, 0x0451);
-            lcd.setTextColor(WHITE);
+            lcd.fillRoundRect(5, y - 2, 230, 16, 3, BACKGROUND_SELECTED);
+            lcd.setTextColor(TEXT_PRIMARY);
         } else {
-            lcd.setTextColor(0xAD55);
+            lcd.setTextColor(TEXT_SECONDARY);
         }
 
         String name = chatList[chatIndex].name;
@@ -287,19 +308,19 @@ void drawChatsPage() {
 
         if (chatList[chatIndex].count > 0) {
             lcd.fillCircle(210, y + 8, 6, 0xF800);
-            lcd.setTextColor(WHITE);
+            lcd.setTextColor(TEXT_PRIMARY);
             lcd.setTextDatum(textdatum_t::middle_center);
             lcd.drawString(String(chatList[chatIndex].count), 210, y + 8);
         }
     }
 
-    drawFooter("` BACK | UP/DOWN | ENTER");
+    drawFooter("` BACK | UP/DOWN | ENTER", BACKGROUND_FOOTER);
 }
 
 void drawChatView() {
     auto& lcd = M5.Display;
-    lcd.clear(0x0841);
-    drawHeader(chatList[selectedChatIndex].name.c_str());
+    lcd.clear(BACKGROUND_COLOR);
+    drawHeader(chatList[selectedChatIndex].name.c_str(), BACKGROUND_HEADER);
 
     lcd.setTextSize(1);
 
@@ -321,8 +342,8 @@ void drawChatView() {
 
         currentY -= messageBlockHeight;
 
-        uint16_t boxColor = isMe ? 0x0451 : 0x2965;
-        uint16_t textColor = WHITE;
+        uint16_t boxColor = isMe ? BACKGROUND_NOT_SELECTED : BACKGROUND_SELECTED;
+        uint16_t textColor = TEXT_PRIMARY;
 
         lcd.fillRoundRect(isMe ? screenWidth - textWidth - messageMargin - 8 : messageMargin,
                          currentY,
@@ -341,14 +362,14 @@ void drawChatView() {
         currentY -= 5;
     }
 
-    drawFooter("` BACK | ENTER to Type");
+    drawFooter("` BACK | ENTER to Type", BACKGROUND_FOOTER);
 }
 
 void drawInputBox() {
     auto& lcd = M5.Display;
     lcd.fillRect(0, 218, 240, 22, 0x2104);
     lcd.setCursor(5, 222);
-    lcd.setTextColor(WHITE);
+    lcd.setTextColor(TEXT_PRIMARY);
     lcd.setTextSize(1);
     String display = messageInputBuffer;
     if (display.length() > 36) display = display.substring(display.length() - 36);
@@ -357,8 +378,8 @@ void drawInputBox() {
 
 void drawSettingsPage() {
     auto& lcd = M5.Display;
-    lcd.clear(0x0841);
-    drawHeader("Settings");
+    lcd.clear(BACKGROUND_COLOR);
+    drawHeader("Settings", BACKGROUND_HEADER);
 
     lcd.setTextSize(1);
     lcd.setTextDatum(textdatum_t::top_left);
@@ -370,14 +391,14 @@ void drawSettingsPage() {
     for (int i = 0; i < settingsCount; i++) {
         int y = startY + i * 24;
         if (i == selectedSetting) {
-            lcd.fillRoundRect(10, y - 2, 220, 20, 4, 0x0451);
-            lcd.setTextColor(WHITE);
+            lcd.fillRoundRect(10, y - 2, 220, 20, 4, BACKGROUND_SELECTED);
+            lcd.setTextColor(TEXT_PRIMARY);
         } else {
-            lcd.setTextColor(0xAD55);
+            lcd.setTextColor(TEXT_SECONDARY);
         }
         lcd.setTextDatum(textdatum_t::middle_left);
         lcd.drawString(settings[i], 20, y + 8);
     }
 
-    drawFooter("` BACK | UP/DOWN | ENTER");
+    drawFooter("` BACK | UP/DOWN | ENTER", BACKGROUND_FOOTER);
 }

@@ -35,3 +35,4 @@ void clearPreferences() {
     preferences.clear();
     preferences.end();
 }
+
