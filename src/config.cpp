@@ -4,6 +4,9 @@ char g_server_ip[40] = "192.168.1.100";
 char g_server_port[6] = "3000";
 char g_wifi_ssid[32] = "";
 char g_wifi_password[64] = "";
+bool g_use_ngrok = false;
+char g_ngrok_username[64] = "";
+char g_ngrok_password[64] = "";
 
 AppState currentState = STATE_BOOT;
 bool needsRedraw = true;
@@ -24,5 +27,8 @@ String serverInputBuffer = "";
 int serverConfigStep = 0;
 int selectedMainMenu = 0;
 int selectedSetting = 0;
+int selectedNgrokChoice = 0;
+String ngrokUsernameBuffer = "";
+String ngrokPasswordBuffer = "";
 
 unsigned long lastKeyPress = 0;

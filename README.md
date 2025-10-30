@@ -17,8 +17,27 @@ The Name of this project literally tells you everything Important. I wanna build
 - [x] Make it work in the local Network 
 - [ ] Improve UI and make it run stable
     - [ ] Chat view & Chat list view Function as they should
+    - [ ] Handle Emojis?...
 - [ ] Integrate some sort of port forwarding or sth like that so we can access whatsapp from anywhere (ngrok maybe)
-- [ ] More features?? / Integrations ?? 
+- [ ] More features?? / Integrations ??
+
+## Server
+
+### Start Server
+Open a terminal in the [Server Folder](./server/). 
+Then run 
+```sh
+node server.js
+```
+
+### Set up Ngrok
+
+Follow [Ngrok installing instructions](https://ngrok.com) 
+
+Run 
+```sh
+ngrok http 3000 --basic-auth="yourUserName:yourPassword"
+```
 
 ## THANKS TO
 - [Bruce](https://github.com/pr3y/Bruce)

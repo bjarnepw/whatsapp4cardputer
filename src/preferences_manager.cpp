@@ -9,6 +9,9 @@ void loadPreferences() {
     preferences.getString("password", g_wifi_password, sizeof(g_wifi_password));
     preferences.getString("server_ip", g_server_ip, sizeof(g_server_ip));
     preferences.getString("server_port", g_server_port, sizeof(g_server_port));
+    g_use_ngrok = preferences.getBool("use_ngrok", false);
+    preferences.getString("ngrok_user", g_ngrok_username, sizeof(g_ngrok_username));
+    preferences.getString("ngrok_pass", g_ngrok_password, sizeof(g_ngrok_password));
     preferences.end();
 }
 
@@ -28,6 +31,17 @@ void saveServerConfig(String ip, String port) {
     preferences.end();
     ip.toCharArray(g_server_ip, sizeof(g_server_ip));
     port.toCharArray(g_server_port, sizeof(g_server_port));
+}
+
+void saveNgrokConfig(bool useNgrok, String username, String password) {
+    preferences.begin("whatsapp", false);
+    preferences.putBool("use_ngrok", useNgrok);
+    preferences.putString("ngrok_user", username);
+    preferences.putString("ngrok_pass", password);
+    preferences.end();
+    g_use_ngrok = useNgrok;
+    username.toCharArray(g_ngrok_username, sizeof(g_ngrok_username));
+    password.toCharArray(g_ngrok_password, sizeof(g_ngrok_password));
 }
 
 void clearPreferences() {
