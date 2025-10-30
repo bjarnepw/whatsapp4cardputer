@@ -16,6 +16,7 @@ The Name of this project literally tells you everything Important. I wanna build
 ## Goals
 - [x] Make it work in the local Network 
 - [ ] Improve UI and make it run stable
+    - [ ] Chat view & Chat list view Function as they should
 - [ ] Integrate some sort of port forwarding or sth like that so we can access whatsapp from anywhere (ngrok maybe)
 - [ ] More features?? / Integrations ?? 
 

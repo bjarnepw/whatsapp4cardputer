@@ -69,7 +69,6 @@ void loop() {
                 drawChatView();
                 break;
             case STATE_TYPING_MESSAGE:
-                drawChatView();
                 drawInputBox();
                 break;
             case STATE_SETTINGS:
