@@ -2,7 +2,7 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/bjarnepw/whatsapp4cardputer?style=for-the-badge)
 ![Forks](https://img.shields.io/github/forks/bjarnepw/whatsapp4cardputer?style=for-the-badge)
 ![Issues](https://img.shields.io/github/issues/bjarnepw/whatsapp4cardputer?style=for-the-badge)
-![Current Status](https://img.shields.io/badge/STATUS:-NOT_COMPILABLE-red?style=for-the-badge)
+![Current Status](https://img.shields.io/badge/STATUS-NOT_COMPILABLE-red?style=for-the-badge)
 
 THIS PROJECT ISN'T FINISHED YET. ANY HELP APPRECIATED
 
