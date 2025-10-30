@@ -2,7 +2,8 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/bjarnepw/whatsapp4cardputer?style=for-the-badge)
 ![Forks](https://img.shields.io/github/forks/bjarnepw/whatsapp4cardputer?style=for-the-badge)
 ![Issues](https://img.shields.io/github/issues/bjarnepw/whatsapp4cardputer?style=for-the-badge)
-![Current Status](https://img.shields.io/badge/STATUS-COMPILABLE-green?style=for-the-badge)
+![Release Status](https://img.shields.io/badge/RELEASE-NO_RELEASE_YET-red?style=for-the-badge)
+![Beta Status](https://img.shields.io/badge/BETA_STATUS-COMPILABLE-green?style=for-the-badge)
 
 ## IDEA
 The Name of this project literally tells you everything Important. I wanna build a custom Whatsapp Client for the Cardputer. Since the Cardputer just is an ESP 32 we need an extra Server for that.
