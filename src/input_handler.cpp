@@ -155,7 +155,7 @@ void handleChatListInput() {
         currentState = STATE_BOOT;
         needsRedraw = true;
     }
-    delay(50)
+    delay(50);
 }
 
 void handleChatViewInput() {
