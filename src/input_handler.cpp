@@ -20,15 +20,15 @@ void handleMainMenuInput() {
     M5Cardputer.update();
     Keyboard_Class::KeysState keyState = M5Cardputer.Keyboard.keysState();
 
-    if (M5Cardputer.Keyboard.isKeyPressed(';') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed(';') && checkKeyPress()) {
         selectedMainMenu = max(0, selectedMainMenu - 1);
         needsRedraw = true;
     }
-    if (M5Cardputer.Keyboard.isKeyPressed('.') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('.') && checkKeyPress()) {
         selectedMainMenu = min(1, selectedMainMenu + 1);
         needsRedraw = true;
     }
-    if (keyState.enter && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.enter && checkKeyPress()) {
         if (selectedMainMenu == 0) {
             if (WiFi.status() != WL_CONNECTED) {
                 showStatusScreen("Error", "WiFi not connected! Go to Settings.");
@@ -59,7 +59,7 @@ void handleWifiScanInput() {
     M5Cardputer.update();
     Keyboard_Class::KeysState keyState = M5Cardputer.Keyboard.keysState();
 
-    if (M5Cardputer.Keyboard.isKeyPressed(';') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed(';') && checkKeyPress()) {
         selectedWifiIndex = max(0, selectedWifiIndex - 1);
         needsRedraw = true;
     }
@@ -67,12 +67,12 @@ void handleWifiScanInput() {
         selectedWifiIndex = min(wifiNetworkCount - 1, selectedWifiIndex + 1);
         needsRedraw = true;
     }
-    if (keyState.enter && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.enter && checkKeyPress()) {
         passwordInputBuffer = "";
         currentState = STATE_WIFI_PASSWORD_INPUT;
         needsRedraw = true;
     }
-    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
         currentState = STATE_SETTINGS;
         needsRedraw = true;
     }
@@ -91,12 +91,12 @@ void handlePasswordInput() {
         }
     }
 
-    if (keyState.del && passwordInputBuffer.length() > 0) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.del && passwordInputBuffer.length() > 0) {
         passwordInputBuffer.remove(passwordInputBuffer.length() - 1);
         updated = true;
     }
 
-    if (keyState.enter && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.enter && checkKeyPress()) {
         if (connectToWifi(wifiNetworks[selectedWifiIndex], passwordInputBuffer)) {
             currentState = STATE_BOOT;
             needsRedraw = true;
@@ -107,7 +107,7 @@ void handlePasswordInput() {
         return;
     }
 
-    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
         currentState = STATE_WIFI_SCAN;
         needsRedraw = true;
         return;
@@ -116,7 +116,7 @@ void handlePasswordInput() {
     if (updated) {
         drawPasswordInputPage();
     }
-    delay(100);
+    delay(50);
 }
 
 void handleServerConfigInput() {
@@ -129,17 +129,17 @@ void handleChatListInput() {
     M5Cardputer.update();
     Keyboard_Class::KeysState keyState = M5Cardputer.Keyboard.keysState();
 
-    if (M5Cardputer.Keyboard.isKeyPressed(';') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed(';') && checkKeyPress()) {
         selectedChatIndex = max(0, selectedChatIndex - 1);
         if (selectedChatIndex < chatListScrollOffset) chatListScrollOffset = selectedChatIndex;
         needsRedraw = true;
     }
-    if (M5Cardputer.Keyboard.isKeyPressed('.') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('.') && checkKeyPress()) {
         selectedChatIndex = min(chatCount - 1, selectedChatIndex + 1);
         if (selectedChatIndex > chatListScrollOffset + 10) chatListScrollOffset = selectedChatIndex - 10;
         needsRedraw = true;
     }
-    if (keyState.enter && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isChange() && keyState.enter && checkKeyPress()) {
         String phone = chatList[selectedChatIndex].phone;
         showStatusScreen("Loading Chat...", chatList[selectedChatIndex].name);
         if (fetchChatMessages(phone)) {
@@ -151,23 +151,23 @@ void handleChatListInput() {
             needsRedraw = true;
         }
     }
-    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
         currentState = STATE_BOOT;
         needsRedraw = true;
     }
-    delay(100);
+    delay(50)
 }
 
 void handleChatViewInput() {
     M5Cardputer.update();
     Keyboard_Class::KeysState keyState = M5Cardputer.Keyboard.keysState();
 
-    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
         currentState = STATE_CHAT_LIST;
         needsRedraw = true;
         return;
     }
-    if (keyState.enter && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.enter && checkKeyPress()) {
         messageInputBuffer = "";
         currentState = STATE_TYPING_MESSAGE;
         drawChatView();
@@ -190,14 +190,14 @@ void handleTypingInput() {
         }
     }
 
-    if (keyState.del) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.del) {
         if (messageInputBuffer.length() > 0) {
             messageInputBuffer.remove(messageInputBuffer.length() - 1);
             updated = true;
         }
     }
 
-    if (keyState.enter && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.enter && checkKeyPress()) {
         if (messageInputBuffer.length() > 0) {
             String phone = chatList[selectedChatIndex].phone;
             showStatusScreen("Sending...", messageInputBuffer);
@@ -213,7 +213,7 @@ void handleTypingInput() {
         }
     }
 
-    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
         currentState = STATE_CHAT_VIEW;
         needsRedraw = true;
         return;
@@ -231,19 +231,19 @@ void handleSettingsInput() {
     M5Cardputer.update();
     Keyboard_Class::KeysState keyState = M5Cardputer.Keyboard.keysState();
 
-    if (M5Cardputer.Keyboard.isKeyPressed(';') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed(';') && checkKeyPress()) {
         selectedSetting = max(0, selectedSetting - 1);
         needsRedraw = true;
     }
-    if (M5Cardputer.Keyboard.isKeyPressed('.') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('.') && checkKeyPress()) {
         selectedSetting = min(2, selectedSetting + 1);
         needsRedraw = true;
     }
-    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
         currentState = STATE_BOOT;
         needsRedraw = true;
     }
-    if (keyState.enter && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.enter && checkKeyPress()) {
         if (selectedSetting == 0) {
             scanWifiNetworks();
         } else if (selectedSetting == 1) {
@@ -262,19 +262,19 @@ void handleNgrokChoiceInput() {
     M5Cardputer.update();
     Keyboard_Class::KeysState keyState = M5Cardputer.Keyboard.keysState();
 
-    if (M5Cardputer.Keyboard.isKeyPressed(';') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed(';') && checkKeyPress()) {
         selectedNgrokChoice = max(0, selectedNgrokChoice - 1);
         needsRedraw = true;
     }
-    if (M5Cardputer.Keyboard.isKeyPressed('.') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('.') && checkKeyPress()) {
         selectedNgrokChoice = min(1, selectedNgrokChoice + 1);
         needsRedraw = true;
     }
-    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
         currentState = STATE_SETTINGS;
         needsRedraw = true;
     }
-    if (keyState.enter && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.enter && checkKeyPress()) {
         if (selectedNgrokChoice == 0) {
             ngrokUsernameBuffer = String(g_ngrok_username);
             currentState = STATE_NGROK_USERNAME_INPUT;
@@ -300,19 +300,19 @@ void handleNgrokUsernameInput() {
         }
     }
 
-    if (keyState.del && ngrokUsernameBuffer.length() > 0) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.del && ngrokUsernameBuffer.length() > 0) {
         ngrokUsernameBuffer.remove(ngrokUsernameBuffer.length() - 1);
         updated = true;
     }
 
-    if (keyState.enter && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.enter && checkKeyPress()) {
         ngrokPasswordBuffer = String(g_ngrok_password);
         currentState = STATE_NGROK_PASSWORD_INPUT;
         needsRedraw = true;
         return;
     }
 
-    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
         currentState = STATE_NGROK_CHOICE;
         needsRedraw = true;
         return;
@@ -338,12 +338,12 @@ void handleNgrokPasswordInput() {
         }
     }
 
-    if (keyState.del && ngrokPasswordBuffer.length() > 0) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.del && ngrokPasswordBuffer.length() > 0) {
         ngrokPasswordBuffer.remove(ngrokPasswordBuffer.length() - 1);
         updated = true;
     }
 
-    if (keyState.enter && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.enter && checkKeyPress()) {
         saveNgrokConfig(true, ngrokUsernameBuffer, ngrokPasswordBuffer);
         serverInputBuffer = String(g_server_ip);
         currentState = STATE_SERVER_ADDRESS_INPUT;
@@ -351,7 +351,7 @@ void handleNgrokPasswordInput() {
         return;
     }
 
-    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
         currentState = STATE_NGROK_USERNAME_INPUT;
         needsRedraw = true;
         return;
@@ -361,7 +361,7 @@ void handleNgrokPasswordInput() {
         drawNgrokPasswordInputPage();
     }
 
-    delay(100);
+    delay(5);
 }
 
 void handleServerAddressInput() {
@@ -377,7 +377,7 @@ void handleServerAddressInput() {
         }
     }
 
-    if (keyState.del && serverInputBuffer.length() > 0) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.del && serverInputBuffer.length() > 0) {
         serverInputBuffer.remove(serverInputBuffer.length() - 1);
         updated = true;
     }
@@ -391,7 +391,7 @@ void handleServerAddressInput() {
         return;
     }
 
-    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
         if (selectedNgrokChoice == 0) {
             currentState = STATE_NGROK_PASSWORD_INPUT;
         } else {
@@ -421,12 +421,12 @@ void handleServerPortInput() {
         }
     }
 
-    if (keyState.del && serverInputBuffer.length() > 0) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.del && serverInputBuffer.length() > 0) {
         serverInputBuffer.remove(serverInputBuffer.length() - 1);
         updated = true;
     }
 
-    if (keyState.enter && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && keyState.enter && checkKeyPress()) {
         String newPort = serverInputBuffer;
         saveServerConfig(String(g_server_ip), newPort);
         if (selectedNgrokChoice == 1) {
@@ -440,7 +440,7 @@ void handleServerPortInput() {
         return;
     }
 
-    if (M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
+    if (M5Cardputer.Keyboard.isChange() && M5Cardputer.Keyboard.isKeyPressed('`') && checkKeyPress()) {
         currentState = STATE_SERVER_ADDRESS_INPUT;
         needsRedraw = true;
         return;
@@ -450,5 +450,5 @@ void handleServerPortInput() {
         drawServerPortInputPage();
     }
 
-    delay(100);
+    delay(50);
 }
